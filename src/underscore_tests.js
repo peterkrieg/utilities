@@ -43,15 +43,50 @@ var _ = { };
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
   _.each = function(collection, iterator) {
+    if(Array.isArray(collection)) {
+      collection.forEach(iterator);
+    }
+    else{
+      for(var prop in collection){
+        iterator(collection[prop], prop, collection);
+      }
+    }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
+  // _.indexOf = function(array, target){
+  //   if(Array.indexOf()){
+  //     return array.indexOf(target);
+  //   }
+  //   else{
+  //     for(var i=0; i<array.length; i++){
+  //       if(arr[i]===target){
+  //         return i;
+  //       }
+  //     }
+  //   }
+  // };
+
   _.indexOf = function(array, target){
+    for(var i=0; i<array.length; i++){
+      if(array[i]===target){
+        return i;
+      }
+    }
+    return -1;
   };
+
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, iterator) {
+    var newArr = [];
+    for(var i=0; i<collection.length; i++){
+      if(collection[i]){
+        newArr.push(collection[i]);
+      }
+    }
+    return newArr;
   };
 
   // Return all elements of an array that don't pass a truth test.
@@ -60,6 +95,13 @@ var _ = { };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var newArr = [];
+    for(var i=0; i<array.length; i++){
+      if(newArr.indexOf(array[i])===-1){
+        newArr.push(array[i]);
+      }
+    }
+    return newArr;
   };
 
 
@@ -71,10 +113,20 @@ var _ = { };
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(array, propertyName) {
+    var propValues = [];
+    for(var i=0; i<array.length; i++){
+      var currentObj = array[i];
+      propValues.push(currentObj[propertyName]);
+    }
+    return propValues;
   };
 
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName, args) {
+    for(var i=0; i<list.length; i++){
+      var currentObj = list[i];
+      currentObj[methodName]();
+    }
   };
 
   // Reduces an array or object to a single value by repetitively calling
@@ -85,7 +137,24 @@ var _ = { };
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
+    if(Array.isArray(collection) ){ // check for array first, since typeof will give object for array
+      for(var i=0; i<collection.length; i++){
+        if(collection[i]===target){
+          return true;
+        }
+      }
+      return false;
+    }
+    else{
+      for(var prop in collection){
+        if(collection[prop]===target){
+          return true;
+        }
+      }
+      return false;
+    }
   };
+
 
 
   // Determine whether all of the elements match a truth test.
@@ -103,7 +172,7 @@ var _ = { };
   //  * =======
   //  *
   //  * In this section, we'll look at a couple of helpers for merging objects.
-   
+
 
   // Extend a given object with all the properties of the passed in
   // object(s).
@@ -148,6 +217,16 @@ var _ = { };
 
   // Shuffle an array.
   _.shuffle = function(array) {
+    var newArr = [];
+    var counter = 0;
+    while(counter<array.length){
+      var randNum = Math.floor(Math.random()*array.length);
+      if(newArr[randNum]===undefined){
+        newArr[randNum]= array[counter];
+        counter++;
+      }
+    }
+    return newArr;
   };
 
   // Sort the object's values by a criterion produced by an iterator.
