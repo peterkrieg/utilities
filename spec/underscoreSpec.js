@@ -1,5 +1,5 @@
 var returnArguments = function(){ return arguments; };
-
+/*
 describe("first", function() {
   it("should be able to pull out the first element of an array", function() {
     expect(_.first([1,2,3])).to.equal(1);
@@ -148,6 +148,7 @@ describe("pluck", function() {
     expect(_.pluck(people, 'name')).to.eql(['moe', 'curly']);
   });
 });
+*/
 
 describe("invoke", function() {
   it("should sort the first array", function() {
@@ -176,6 +177,7 @@ describe("invoke with function reference", function() {
     expect(result[1]).to.eql([1, 2, 3]);
   });
 });
+
 
 describe("reduce", function() {
   it("should be able to sum up an array", function() {

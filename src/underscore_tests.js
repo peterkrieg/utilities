@@ -82,7 +82,7 @@ var _ = { };
   _.filter = function(collection, iterator) {
     var newArr = [];
     for(var i=0; i<collection.length; i++){
-      if(collection[i]){
+      if(iterator(collection[i])){
         newArr.push(collection[i]);
       }
     }
@@ -91,6 +91,23 @@ var _ = { };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, iterator) {
+    // Iterator is a function test that you apply to every value in collection
+
+    // var newArr = [];
+    // for(var i=0; i<collection.length; i++){
+    //   if(!iterator(collection[i])){
+    //     newArr.push(collection[i]);
+    //   }
+    // }
+    // return newArr;
+
+    // alternative way
+    for(var i=collection.length-1; i>=0; i--){
+      if(iterator(collection[i])){
+        collection.splice(i, 1);
+      }
+    }
+    return collection;
   };
 
   // Produce a duplicate-free version of the array.
@@ -107,6 +124,10 @@ var _ = { };
 
   // Return the results of applying an iterator to each element.
   _.map = function(array, iterator) {
+    for(var i=0; i<array.length; i++){
+      array[i]= iterator(array[i]);
+    }
+    return array;
   };
 
   // Takes an array of objects and returns and array of the values of
@@ -124,15 +145,27 @@ var _ = { };
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName, args) {
     for(var i=0; i<list.length; i++){
-      var currentObj = list[i];
-      currentObj[methodName]();
+      var currentArr = list[i];
+      var method = currentArr[methodName] || methodName;
+      method.apply(currentArr, args);
+
+
+      // // alternative way
+      // if(typeof methodName ==='string'){
+      //   currentArr[methodName](args);
+      // }
+      // else{
+      //   methodName.apply(currentArr, args);
+      // }
     }
+    return list;
   };
 
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
   // the return value of the previous iterator call.
   _.reduce = function(collection, iterator, initialValue) {
+
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -159,6 +192,22 @@ var _ = { };
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    if(Array.isArray(collection)){
+      for(var i=0; i<collection; i++){
+        if(!collection[i]){
+          return false;
+        }
+      }
+      return true;
+    }
+    else{
+      for(var prop in collection){
+        if(!collection[prop]){
+          return false;
+        }
+      }
+      return true;
+    }
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -211,6 +260,7 @@ var _ = { };
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    setTimeout(func, wait);
   };
 
 
