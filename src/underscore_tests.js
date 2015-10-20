@@ -125,7 +125,7 @@ var _ = { };
   // Return the results of applying an iterator to each element.
   _.map = function(array, iterator) {
     for(var i=0; i<array.length; i++){
-      array[i]= iterator(array[i]);
+      array[i] = iterator(array[i]);
     }
     return array;
   };
@@ -165,6 +165,20 @@ var _ = { };
   // iterator(previousValue, item) for each item. previousValue should be
   // the return value of the previous iterator call.
   _.reduce = function(collection, iterator, initialValue) {
+    var result;
+    var prevValue;
+    if(initialValue){
+      prevValue = iterator(initialValue, collection[0]);
+    }
+    else{
+      prevValue = collection[0];
+    }
+
+    for(var i=0; i<collection.length-1; i++){
+      result = iterator(prevValue, collection[i+1]);
+      prevValue = result;
+    }
+    return result;
 
   };
 
@@ -192,27 +206,28 @@ var _ = { };
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    if(Array.isArray(collection)){
-      for(var i=0; i<collection; i++){
-        if(!collection[i]){
-          return false;
-        }
-      }
+    if(!iterator){
       return true;
     }
-    else{
-      for(var prop in collection){
-        if(!collection[prop]){
-          return false;
-        }
+    for(var i=0; i<collection.length; i++){
+      if(!iterator(collection[i])){
+        return false;
       }
-      return true;
     }
+    return true;
+
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+    iterator = iterator || function(number){return number % 2 === 0;};  // default iterator
+    for(var i=0; i<collection.length; i++){
+      if(iterator(collection[i])){
+        return true;
+      }
+    }
+    return false;
   };
 
 

@@ -148,7 +148,7 @@ describe("pluck", function() {
     expect(_.pluck(people, 'name')).to.eql(['moe', 'curly']);
   });
 });
-*/
+
 
 describe("invoke", function() {
   it("should sort the first array", function() {
@@ -177,6 +177,7 @@ describe("invoke with function reference", function() {
     expect(result[1]).to.eql([1, 2, 3]);
   });
 });
+*/
 
 
 describe("reduce", function() {
