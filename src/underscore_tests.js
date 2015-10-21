@@ -148,6 +148,10 @@ var _ = { };
       var currentArr = list[i];
       var method = currentArr[methodName] || methodName;
       method.apply(currentArr, args);
+      // could equal [5,1,7]['sort'].apply([5,1,7], args)
+
+      [1,5,7]['sort'].apply([1,5,7], args);
+      Array.prototype.sort.apply([1,5,7, args]);
 
 
       // // alternative way
@@ -252,19 +256,49 @@ var _ = { };
   // Extend a given object with all the properties of the passed in
   // object(s).
   _.extend = function(obj) {
-    var newObj = {};
-    for(var i=0; i<obj.length; i++){
-      var currentObj = obj[i];
+    var objects = arguments;
+    for(var i=0; i<arguments.length; i++){
+      var currentObj = arguments[i];
       for(var prop in currentObj){
-        newObj[prop]=currentObj[prop];
+        obj[prop]= currentObj[prop];
       }
     }
-    return newObj;
+    return obj;
   };
+
+
+
+
+
+
+
+
+
+
+
+
+  //   for(var i=0; i<obj.length; i++){
+  //     var currentObj = obj[i];
+  //     for(var prop in currentObj){
+  //       newObj[prop]=currentObj[prop];
+  //     }
+  //   }
+  //   return newObj;
+  // };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    var objects = arguments;
+    for(var i=0; i<arguments.length; i++){
+      var currentObj = arguments[i];
+      for(var prop in currentObj){
+        if(obj[prop]===undefined){
+          obj[prop]= currentObj[prop];
+        }
+      }
+    }
+    return obj;
   };
 
 
@@ -351,6 +385,19 @@ var _ = { };
     if(typeof iterator === 'function'){
       collection.sort(iterator);
     }
+    // else if(typeof iterator==='string'){
+      
+    // }
+
+
+
+
+
+
+
+
+
+
     // else{
     //   collection.sort(function(a,b){return a-b});
     // }
@@ -408,32 +455,32 @@ var _ = { };
 
   // This code should work below.  I ran it in JSBin, and chrome console to test, and works perfectly there
   // but not here.. works for both tests in underscoreSpec.js
+  _.difference = function(arrays) {
+    var firstArr = arguments[0];
+    for(var i=1; i<arguments.length; i++){
+      var currentArr = arguments[i];
+      for(var j=firstArr.length-1; j>=0; j--){
+        if(currentArr.indexOf(firstArr[j])>-1){  // element exists in both arrays, must be removed
+          firstArr.splice(j, 1);
+        }
+      }
+    }
+    return firstArr;
+  };
+
+  // alternative way, to not affect original first array, this ALSO works in JSbin, and chrome console..
   // _.difference = function(array) {
   //   var firstArr = array[0];
+  //   var newArr = firstArr;
   //   for(var i=1; i<array.length; i++){
   //     var currentArr = array[i];
   //     for(var j=firstArr.length-1; j>=0; j--){
   //       if(currentArr.indexOf(firstArr[j])>-1){  // element exists in both arrays, must be removed
-  //         firstArr.splice(j, 1);
+  //         newArr.splice(j, 1);
   //       }
   //     }
   //   }
-  //   return firstArr;
+  //   return newArr;
   // };
-
-  // alternative way, to not affect original first array, this ALSO works in JSbin, and chrome console..
-  _.difference = function(array) {
-    var firstArr = array[0];
-    var newArr = firstArr;
-    for(var i=1; i<array.length; i++){
-      var currentArr = array[i];
-      for(var j=firstArr.length-1; j>=0; j--){
-        if(currentArr.indexOf(firstArr[j])>-1){  // element exists in both arrays, must be removed
-          newArr.splice(j, 1);
-        }
-      }
-    }
-    return newArr;
-  };
 
 }).call(this);

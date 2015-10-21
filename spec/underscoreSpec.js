@@ -1,5 +1,15 @@
 var returnArguments = function(){ return arguments; };
-/*
+
+
+
+describe("equal", function(){
+  it("testing equal", function(){
+    var o = {x: 'blah'};
+    var q = {x: 'blah'};
+    expect(o).to.eql(q);
+  });
+});
+
 describe("first", function() {
   it("should be able to pull out the first element of an array", function() {
     expect(_.first([1,2,3])).to.equal(1);
@@ -177,7 +187,7 @@ describe("invoke with function reference", function() {
     expect(result[1]).to.eql([1, 2, 3]);
   });
 });
-*/
+
 
 
 describe("reduce", function() {
@@ -248,6 +258,7 @@ describe("every", function() {
   });
 });
 
+
 describe("some", function() {
   var nativeSome = Array.prototype.some;
   var isEven = function(number){
@@ -300,6 +311,7 @@ describe("some", function() {
     expect(_.some([0], passThrough)).to.equal(false);
   });
 });
+
 
 describe("extend", function() {
   it("should extend an object with the attributes of another", function() {
@@ -497,6 +509,7 @@ describe("zip", function() {
     ]);
   });
 });
+
 
 describe("intersection", function() {
   it("should take the set intersection of two arrays", function() {
