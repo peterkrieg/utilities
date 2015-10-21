@@ -222,13 +222,24 @@ var _ = { };
   // provided, provide a default one
   _.some = function(collection, iterator) {
     iterator = iterator || function(number){return number % 2 === 0;};  // default iterator
+    var counter = 0;
+    var falsey = [null, 0, '', false, NaN, undefined];
     for(var i=0; i<collection.length; i++){
-      if(iterator(collection[i])){
+      if(falsey.indexOf(collection[i])>-1){
+        counter++;
+      }
+    }
+    if(counter===collection.length){
+      return false;
+    }
+    // now check iterator
+    for(var j=0; j<collection.length; j++){
+      if(iterator(collection[j])){
         return true;
       }
     }
     return false;
-  };
+  } ;
 
 
   // *
@@ -241,6 +252,14 @@ var _ = { };
   // Extend a given object with all the properties of the passed in
   // object(s).
   _.extend = function(obj) {
+    var newObj = {};
+    for(var i=0; i<obj.length; i++){
+      var currentObj = obj[i];
+      for(var prop in currentObj){
+        newObj[prop]=currentObj[prop];
+      }
+    }
+    return newObj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
@@ -257,6 +276,13 @@ var _ = { };
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
   _.once = function(func) {
+    var executed = false;
+    return function(){
+      if(!executed){
+        executed = true;
+        func();
+      }
+    };
   };
 
   // Memoize an expensive function by storing its results. You may assume
@@ -266,6 +292,15 @@ var _ = { };
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    // var executed = false;
+    // return function(){
+    //   if(!executed){
+    //     executed = true;
+    //     var result = func();
+    //     return result;
+    //   }
+    //   return func();
+    // };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -275,7 +310,21 @@ var _ = { };
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-    setTimeout(func, wait);
+    var args = arguments;
+    console.log(args);
+    // delete func, and wait on args, want all args after that, if any
+    // this function should work, it works on JSBin, not sure why it doesn't pass test
+    //  http://jsbin.com/vicera/edit?js,console    
+    delete args[0];
+    delete args[1];
+    console.log(args);
+    var newArgs = [];
+    for(var prop in args){
+      newArgs.push(args[prop]);
+    }
+    console.log(newArgs);
+    var newFunc = func.bind(newArgs);
+    setTimeout(newFunc, wait);
   };
 
 
@@ -299,6 +348,16 @@ var _ = { };
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    if(typeof iterator === 'function'){
+      collection.sort(iterator);
+    }
+    // else{
+    //   collection.sort(function(a,b){return a-b});
+    // }
+    // else if (typeof iterator==='string'){
+
+    // }
+    return collection;
   };
 
   // Zip together two or more arrays with elements of the same index
@@ -317,11 +376,64 @@ var _ = { };
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var arrays = arguments;
+    console.log(arguments);
+    var shared = [];
+    // why does this not work??  trying to make more efficient, start at first array
+    // arrays.sort(function(a,b){return a.length-b.length;});
+    //  I think it doesn't wory because I looked up, and arguments isn't actually an array, 
+    // it is "array like object".  Need to call sort method
+
+    // this line makes program more efficient.  Basing entire intersection on shortest array
+    Array.prototype.sort.call(arrays, function(a,b){return a.length-b.length;});
+    console.log(arrays);
+    var firstArr = arrays[0];
+    for(var i=0; i<firstArr.length; i++){
+      var element = firstArr[i];
+      for(var j=1; j<arrays.length; j++){
+        var currentArr = arrays[j];
+        if(currentArr.indexOf(element)===-1){ // element not shared, break loop
+          break;
+        }
+        if(j===arrays.length-1){
+          shared.push(element);
+        }
+      }
+    }
+    return shared;
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
+
+  // This code should work below.  I ran it in JSBin, and chrome console to test, and works perfectly there
+  // but not here.. works for both tests in underscoreSpec.js
+  // _.difference = function(array) {
+  //   var firstArr = array[0];
+  //   for(var i=1; i<array.length; i++){
+  //     var currentArr = array[i];
+  //     for(var j=firstArr.length-1; j>=0; j--){
+  //       if(currentArr.indexOf(firstArr[j])>-1){  // element exists in both arrays, must be removed
+  //         firstArr.splice(j, 1);
+  //       }
+  //     }
+  //   }
+  //   return firstArr;
+  // };
+
+  // alternative way, to not affect original first array, this ALSO works in JSbin, and chrome console..
   _.difference = function(array) {
+    var firstArr = array[0];
+    var newArr = firstArr;
+    for(var i=1; i<array.length; i++){
+      var currentArr = array[i];
+      for(var j=firstArr.length-1; j>=0; j--){
+        if(currentArr.indexOf(firstArr[j])>-1){  // element exists in both arrays, must be removed
+          newArr.splice(j, 1);
+        }
+      }
+    }
+    return newArr;
   };
 
 }).call(this);
