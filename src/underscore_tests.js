@@ -325,7 +325,24 @@ var _ = { };
   // Memoize should return a function that when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+
+  // only one where I found solution completely online.. need to now understand why it works
   _.memoize = function(func) {
+    var memo = {};
+    var slice = Array.prototype.slice;
+
+    return function() {
+      var args = slice.call(arguments);
+
+      if (args in memo)
+        return memo[args];
+      else
+        return (memo[args] = func.apply(this, args));
+
+    };
+
+
+
     // var executed = false;
     // return function(){
     //   if(!executed){
@@ -343,22 +360,20 @@ var _ = { };
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
+
   _.delay = function(func, wait) {
     var args = arguments;
-    console.log(args);
-    // delete func, and wait on args, want all args after that, if any
-    // this function should work, it works on JSBin, not sure why it doesn't pass test
-    //  http://jsbin.com/vicera/edit?js,console    
+    // delete func and wait on args, want all args after that, if any
     delete args[0];
     delete args[1];
-    console.log(args);
     var newArgs = [];
     for(var prop in args){
       newArgs.push(args[prop]);
     }
-    console.log(newArgs);
-    var newFunc = func.bind(newArgs);
-    setTimeout(newFunc, wait);
+    // other idea was to use bound function, and not have to include new function inside SetTimeout
+    // but couldn't figure out way to use bind() with array of arguments, which is what newArgs is
+    // so anonymous callback function in setTimeout invocates func with apply() method, passing newArgs array
+    setTimeout(function(){func.apply(null, newArgs);}, wait);
   };
 
 
@@ -448,7 +463,46 @@ var _ = { };
   // Takes a multidimensional array and converts it to a one-dimensional array.
   // The new array should contain all elements of the multidimensional array.
   _.flatten = function(nestedArray, result) {
-    var newArr = [];
+    nestedArray = [].concat.apply([], nestedArray);
+    return nestedArray;
+
+
+
+
+
+
+
+
+    // var newArr = [];
+    // for(var i=0; i<nestedArray.length; i++){
+    //   arr[i] = extract(arr[i]);
+    // }
+
+    // var extract = function(element){
+
+
+
+    // }
+
+
+
+
+
+
+
+
+
+    // var extract = function(arr){
+    //   for(var i=0; i<arr.length; i++){
+    //     if(Array.isArray(arr[i])){
+    //       arr.splice(i)
+    //     }
+    //   }
+    // };
+
+
+
+
     // for(var i=0; i<nestedArray.length; i++){
     //   var element = nestedArray[i];
 
