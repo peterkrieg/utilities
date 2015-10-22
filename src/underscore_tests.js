@@ -538,7 +538,6 @@ var _ = { };
     }
     return firstArr;
   };
-
   // alternative way, to not affect original first array, this ALSO works in JSbin, and chrome console..
   // _.difference = function(array) {
   //   var firstArr = array[0];
