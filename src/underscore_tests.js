@@ -150,8 +150,8 @@ var _ = { };
       method.apply(currentArr, args);
       // could equal [5,1,7]['sort'].apply([5,1,7], args)
 
-      [1,5,7]['sort'].apply([1,5,7], args);
-      Array.prototype.sort.apply([1,5,7, args]);
+      // [1,5,7]['sort'].apply([1,5,7], args);
+      // Array.prototype.sort.apply([1,5,7, args]);
 
 
       // // alternative way
@@ -382,28 +382,42 @@ var _ = { };
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    // first check for undefined values
+    if(collection.indexOf(undefined)>-1){
+      console.log('yep');
+      var counter = 0;  // keep track of how many undefined
+      for(var i=collection.length-1; i>=0; i--){
+        if(collection[i]===undefined){
+          counter++;
+          // undefinedVals.push(collection[i]);
+          collection.splice(i, 1);
+        }
+      }
+      if(typeof iterator === 'function'){
+        collection.sort(iterator);
+      }
+      else if(typeof iterator ==='string'){
+        collection.sort(function(a,b){return a.length- b.length;});
+      }
+      for(var k=0; k<counter; k++){
+        collection.push(undefined);
+      }
+      console.log(collection);
+      return collection;
+    }
+
+
+
     if(typeof iterator === 'function'){
       collection.sort(iterator);
     }
-    // else if(typeof iterator==='string'){
-      
-    // }
+    else if(typeof iterator ==='string'){
+      collection.sort(function(a,b){return a.length- b.length;});
+    }
 
 
 
 
-
-
-
-
-
-
-    // else{
-    //   collection.sort(function(a,b){return a-b});
-    // }
-    // else if (typeof iterator==='string'){
-
-    // }
     return collection;
   };
 
@@ -413,11 +427,56 @@ var _ = { };
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    var result = [];
+    var arr = [];
+    for(var prop in arguments){
+      arr.push(arguments[prop]);
+    }
+    arr.sort(function(a,b){return b.length-a.length;}); // sorts array of arrays, by longest array first
+    var numRef = arr[0].length;
+
+    for(var i=0; i<numRef; i++){
+      var currentArr = arr[i];
+      result[i]= [];
+      for(var j=0; j<arr.length; j++){
+        result[i].push(arr[j][i]);
+      }
+    }
+    return result;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
   // The new array should contain all elements of the multidimensional array.
   _.flatten = function(nestedArray, result) {
+    var newArr = [];
+    // for(var i=0; i<nestedArray.length; i++){
+    //   var element = nestedArray[i];
+
+
+      // function checkArr(arr){
+      //   if(!Array.isArray(element)){
+      //     newArr.push(element);
+      //   }
+
+
+
+
+
+      // }
+
+
+
+    //   if(!Array.isArray(element)){
+    //     newArr.push(element);
+    //   }
+    //   else{
+
+    //   }
+
+    // }
+
+
+
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
