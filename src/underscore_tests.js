@@ -55,19 +55,6 @@ var _ = { };
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
-  // _.indexOf = function(array, target){
-  //   if(Array.indexOf()){
-  //     return array.indexOf(target);
-  //   }
-  //   else{
-  //     for(var i=0; i<array.length; i++){
-  //       if(arr[i]===target){
-  //         return i;
-  //       }
-  //     }
-  //   }
-  // };
-
   _.indexOf = function(array, target){
     for(var i=0; i<array.length; i++){
       if(array[i]===target){
@@ -101,7 +88,7 @@ var _ = { };
     // }
     // return newArr;
 
-    // alternative way
+    // alternative way, better
     for(var i=collection.length-1; i>=0; i--){
       if(iterator(collection[i])){
         collection.splice(i, 1);
@@ -148,11 +135,12 @@ var _ = { };
       var currentArr = list[i];
       var method = currentArr[methodName] || methodName;
       method.apply(currentArr, args);
-      // could equal [5,1,7]['sort'].apply([5,1,7], args)
 
-      // [1,5,7]['sort'].apply([1,5,7], args);
-      // Array.prototype.sort.apply([1,5,7, args]);
+      // if method is string could equal
+      // [5,1,7]['sort'].apply([5,1,7], args)
 
+      // or if method is global, could be
+      // Array.prototype.sort.apply([1,5,7], args);
 
       // // alternative way
       // if(typeof methodName ==='string'){
@@ -267,25 +255,6 @@ var _ = { };
   };
 
 
-
-
-
-
-
-
-
-
-
-
-  //   for(var i=0; i<obj.length; i++){
-  //     var currentObj = obj[i];
-  //     for(var prop in currentObj){
-  //       newObj[prop]=currentObj[prop];
-  //     }
-  //   }
-  //   return newObj;
-  // };
-
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
@@ -340,7 +309,6 @@ var _ = { };
         return (memo[args] = func.apply(this, args));
 
     };
-
 
 
     // var executed = false;
@@ -467,12 +435,6 @@ var _ = { };
     return nestedArray;
 
 
-
-
-
-
-
-
     // var newArr = [];
     // for(var i=0; i<nestedArray.length; i++){
     //   arr[i] = extract(arr[i]);
@@ -483,10 +445,6 @@ var _ = { };
 
 
     // }
-
-
-
-
 
 
 
